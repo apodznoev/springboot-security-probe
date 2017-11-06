@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/select2.min.css" type="text/css"/>
+    <script type="application/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="application/javascript" src="js/select2.full.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            $('#offersHolder').select2({
+                placeholder: 'Select an option',
+                ajax: {
+                    type: "GET",
+                    url: "/v.1/car/offers",
+                    dataType: 'json',
+                    quietMillis: 250,
+                    data: function (queryData) {
+                        return {
+                            queryString: queryData.term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+
+                        return {
+                            results: $.map(data.offers, function (offer) {
+                                return {
+                                    text: offer.carModel,
+                                    slug: offer.carManufacturer,
+                                    id: offer.id,
+                                    data: offer
+                                }
+                            }),
+                            pagination: {
+                                more: (params.page * 30) < data.offersCount
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                width: 200,
+                minimumInputLength: 1
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="offersContainer" style="margin-left: 50%; margin-top: 10%; position: relative;">
+<select id="offersHolder" name="offers">
+    <option value="none">Click&Type to search</option>
+</select>
+</div>
+</body>
+</html>
