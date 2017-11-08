@@ -1,4 +1,4 @@
-package de.avpod.avira.service;
+package de.avpod.kickout.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

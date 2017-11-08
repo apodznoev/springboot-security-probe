@@ -1,4 +1,4 @@
-package de.avpod.avira;
+package de.avpod.kickout;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

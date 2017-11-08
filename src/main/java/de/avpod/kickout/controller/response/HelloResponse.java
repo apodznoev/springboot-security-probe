@@ -1,4 +1,4 @@
-package de.avpod.avira;
+package de.avpod.kickout.controller.response;
 
 /**
  * Created by apodznoev
