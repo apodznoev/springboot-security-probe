@@ -3,6 +3,7 @@ package de.avpod.kickout.security;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * @author Andrei.Podznoev
@@ -10,19 +11,22 @@ import java.util.Collections;
  */
 public class QrAuthenticationToken extends AbstractAuthenticationToken {
     private final String qrToken;
+    private final String name;
 
-    public QrAuthenticationToken(String qrToken) {
+    public QrAuthenticationToken(String qrToken, String authUser) {
         super(Collections.emptyList());
         this.qrToken = qrToken;
+        this.name = authUser;
+        setAuthenticated(true);
     }
 
     @Override
-    public String getCredentials() {
-        return qrToken;
+    public Object getCredentials() {
+        return "";
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return qrToken + name;
     }
 }

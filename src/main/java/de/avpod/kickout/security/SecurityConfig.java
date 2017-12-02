@@ -8,7 +8,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by apodznoev
@@ -24,20 +31,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthenticationManager authenticationManager = authenticationManager();
         http
                 .authorizeRequests()
-                .antMatchers("/**/unknownVisit", "/**/hello")
+                .antMatchers("/api/v1/landing")
                 .permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilterBefore(new HttpRequestToTokenFilter(authenticationManager), AnonymousAuthenticationFilter.class)
+                .anonymous().disable()
+                .addFilterAt(new CustomTokenAuthenticationFilter("/api/v1/landing"), AnonymousAuthenticationFilter.class)
         ;
     }
 
-    @Bean
-    public CustomAuthenticationProvider springAuthenticationProvider() {
-        return new CustomAuthenticationProvider();
+
+    @Component( "restAuthenticationEntryPoint" )
+    public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+
+        @Override
+        public void commence(javax.servlet.http.HttpServletRequest request,
+                             HttpServletResponse response,
+                             AuthenticationException authException) throws IOException, ServletException {
+            response.sendError( HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized" );
+        }
     }
 
 }

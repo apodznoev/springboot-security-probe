@@ -18,7 +18,7 @@ public class HttpRequestToTokenFilter extends AbstractPreAuthenticatedProcessing
 
     @Override
     protected Object getPreAuthenticatedPrincipal(javax.servlet.http.HttpServletRequest request) {
-        return authenticationManager.authenticate(new QrAuthenticationToken(request.getParameter("qrSourceId")));
+        return authenticationManager.authenticate(new QrAuthenticationToken(request.getParameter("qrSourceId"), "AuthUser"));
     }
 
     @Override
